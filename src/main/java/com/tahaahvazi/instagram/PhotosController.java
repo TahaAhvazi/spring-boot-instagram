@@ -1,8 +1,10 @@
 package com.tahaahvazi.instagram;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,8 @@ public class PhotosController {
     }
     @GetMapping("/photos/{id}")
     public Photos getPhoto(@PathVariable String id){
-        return dataBase.get(id);
+        Photos photos = dataBase.get(id);
+        if (photos == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return photos;
     }
 }
