@@ -1,24 +1,24 @@
-package com.tahaahvazi.instagram;
+package com.tahaahvazi.instagram.controllers;
 
-import jakarta.validation.Valid;
-import jdk.jshell.Snippet;
+import com.tahaahvazi.instagram.service.PhotoService;
+import com.tahaahvazi.instagram.model.Photos;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class PhotosController {
 
-    private Map<String, Photos> dataBase = new HashMap<>(){{
-        put("1", new Photos("1","TahaAhvazi.png"));
-        put("2", new Photos("2","AlirezaAhvazi.png"));
-        put("3", new Photos("3","HosseinMoradi.png"));
-        put("4", new Photos("4","MahsaBeyranvand.png"));
+    private final PhotoService photoService;
 
-    }};
+    public PhotosController(PhotoService photoService){
+        this.photoService = photoService;
+    }
+
     @GetMapping("/")
     public String checkWorking(){
         return "Working fine on PORT : 8080";
@@ -26,28 +26,26 @@ public class PhotosController {
 
     @GetMapping("/photos")
     public Collection<Photos> AllPhotos(){
-        if(dataBase.values().isEmpty()){
+        if(photoService.get().isEmpty()){
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
         }else {
-           return dataBase.values();
+           return photoService.get();
         }
     }
     @GetMapping("/photos/{id}")
     public Photos getPhoto(@PathVariable String id){
-        Photos photos = dataBase.get(id);
+        Photos photos = photoService.get(id);
         if (photos == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return photos;
     }
     @DeleteMapping("/photos/{id}")
     public void deletePhoto(@PathVariable String id){
-        Photos photo = dataBase.get(id);
+        Photos photo = photoService.get(id);
         if (photo == null) throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
-        dataBase.remove(id);
+        photoService.remove(id);
     }
     @PostMapping("/photos")
-    public Photos create(@Valid Photos photos){
-        photos.setId(UUID.randomUUID().toString());
-        dataBase.put(photos.getId(), photos);
-        return photos;
+    public Photos create(MultipartFile file) throws IOException {
+        return photoService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
     }
 }
