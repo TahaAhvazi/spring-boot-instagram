@@ -1,17 +1,13 @@
 package com.tahaahvazi.instagram;
 
+import jakarta.validation.Valid;
 import jdk.jshell.Snippet;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class PhotosController {
@@ -24,8 +20,8 @@ public class PhotosController {
 
     }};
     @GetMapping("/")
-    public String sayHello(){
-        return "Hello World!";
+    public String checkWorking(){
+        return "Working fine on PORT : 8080";
     }
 
     @GetMapping("/photos")
@@ -47,5 +43,11 @@ public class PhotosController {
         Photos photo = dataBase.get(id);
         if (photo == null) throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
         dataBase.remove(id);
+    }
+    @PostMapping("/photos")
+    public Photos create(@Valid Photos photos){
+        photos.setId(UUID.randomUUID().toString());
+        dataBase.put(photos.getId(), photos);
+        return photos;
     }
 }

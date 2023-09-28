@@ -1,7 +1,10 @@
 package com.tahaahvazi.instagram;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class Photos {
     private String id;
+    @NotEmpty
     private String fileName;
 
     //Create the constructor for the class
