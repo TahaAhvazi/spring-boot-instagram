@@ -1,5 +1,6 @@
 package com.tahaahvazi.instagram;
 
+import jdk.jshell.Snippet;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,11 @@ public class PhotosController {
 
     @GetMapping("/photos")
     public Collection<Photos> AllPhotos(){
-        return dataBase.values();
+        if(dataBase.values().isEmpty()){
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }else {
+           return dataBase.values();
+        }
     }
     @GetMapping("/photos/{id}")
     public Photos getPhoto(@PathVariable String id){
