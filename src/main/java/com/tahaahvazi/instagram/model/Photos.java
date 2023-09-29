@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 @Table("PHOTOS")
 public class Photos {
     @Id
@@ -21,10 +24,12 @@ public class Photos {
 
     };
     // The parameterized Constructor
-//    public Photos(String id, String fileName){
-//        this.id = id;
-//        this.fileName = fileName;
-//    }
+    public Photos(Integer id, String fileName, String contentType, byte[] data){
+        this.id = id;
+        this.fileName = fileName;
+        this.ContentType = contentType;
+        this.data = data;
+    }
     //These are the Raw data !
     public String getFileName() {
         return fileName;
@@ -56,5 +61,23 @@ public class Photos {
 
     public void setContentType(String contentType) {
         ContentType = contentType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Photos photos = (Photos) o;
+        return Objects.equals(id, photos.id) &&
+                Objects.equals(fileName, photos.fileName) &&
+                Objects.equals(ContentType, photos.ContentType) &&
+                Arrays.equals(data, photos.data);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, fileName, ContentType);
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 }
