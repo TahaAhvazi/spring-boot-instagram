@@ -2,9 +2,13 @@ package com.tahaahvazi.instagram.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("PHOTOS")
 public class Photos {
-    private String id;
+    @Id
+    private Integer id;
     @NotEmpty
     private String fileName;
     private String ContentType;
@@ -17,10 +21,10 @@ public class Photos {
 
     };
     // The parameterized Constructor
-    public Photos(String id, String fileName){
-        this.id = id;
-        this.fileName = fileName;
-    }
+//    public Photos(String id, String fileName){
+//        this.id = id;
+//        this.fileName = fileName;
+//    }
     //These are the Raw data !
     public String getFileName() {
         return fileName;
@@ -30,11 +34,11 @@ public class Photos {
         this.fileName = fileName;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

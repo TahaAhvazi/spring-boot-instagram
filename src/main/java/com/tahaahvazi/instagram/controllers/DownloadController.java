@@ -15,7 +15,7 @@ public class DownloadController {
         this.photoService = photoService;
     }
     @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> download(@PathVariable String id){
+    public ResponseEntity<byte[]> download(@PathVariable Integer id){
         Photos photos = photoService.get(id);
         if (photos == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         byte[] data = photos.getData();

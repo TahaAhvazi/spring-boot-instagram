@@ -1,6 +1,7 @@
 package com.tahaahvazi.instagram.service;
 
 import com.tahaahvazi.instagram.model.Photos;
+import com.tahaahvazi.instagram.repository.PhotoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -11,33 +12,30 @@ import java.util.UUID;
 @Service
 public class PhotoService {
 
-    private Map<String, Photos> dataBase = new HashMap<>(){{
-        put("1", new Photos("1","TahaAhvazi.png"));
-        put("2", new Photos("2","AlirezaAhvazi.png"));
-        put("3", new Photos("3","HosseinMoradi.png"));
-        put("4", new Photos("4","MahsaBeyranvand.png"));
+    private final PhotoRepository photoRepository;
 
-    }};
-
+    public PhotoService(PhotoRepository photoRepository){
+        this.photoRepository = photoRepository;
+    }
+//TODO: I should change the type of function if faced an error
     public Collection<Photos> get() {
-        return dataBase.values();
+        return (Collection<Photos>) photoRepository.findAll();
     }
 
-    public Photos get(String id) {
-        return dataBase.get(id);
+    public Photos get(Integer id) {
+        return photoRepository.findById(id).orElse(null);
     }
 
-    public void remove(String id) {
-        dataBase.remove(id);
+    public void remove(Integer id) {
+        photoRepository.deleteById(id);
     }
 
     public Photos save(String fileName, String contentType, byte[] data) {
         Photos photos = new Photos();
         photos.setContentType(contentType);
-        photos.setId(UUID.randomUUID().toString());
         photos.setFileName(fileName);
         photos.setData(data);
-        dataBase.put(photos.getId(),photos);
+        photoRepository.save(photos);
         return photos;
     }
 }
